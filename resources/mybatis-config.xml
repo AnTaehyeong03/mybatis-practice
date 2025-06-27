@@ -13,6 +13,34 @@
 		2. typeAliases를 추가하여 별칭부여
 		3. environment추가하여 db연동
 		4. mappers를 추가하여 Mapper파일 등록
-	 -->
+	-->
+	<properties resource="driver.properties"></properties>
+	
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.kh.practice.model.vo.Board" alias="Member"/>
+		<typeAlias type="com.kh.practice.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.kh.practice.model.vo.Reply" alias="Member"/>
+	</typeAliases>
+	
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="user" value="${user}" />
+				<property name="pw" value="${pw}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<mapper resource="/mappers/board-mapper.xml"/>
+		<mapper resource="/mappers/member-mapper.xml"/>
+	</mappers>
 
 </configuration>
