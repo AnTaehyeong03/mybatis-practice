@@ -15,28 +15,28 @@
 		- resultMap의 id는 자율적으로 작성       
 		- parameterType은 자율적으로 작성	
 	 -->
-	<select id="selectMemberById" parameterType="string">
+	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap1">
 		SELECT USER_NO, USER_ID, USER_PWD, USER_NAME, Email
 		FROM MEMBER
 		WHERE USER_ID = #{userId}
 	</select>
 	
-	<resultMap id="MemberMap1" type="member">
+	<resultMap type="member" id="memberResultMap1">
 		<id column="USER_NO" property="userNo" />
-		<id column="USER_ID" property="userId" />
-		<id column="USER_PWD" property="userPwd" />
-		<id column="USER_NAME" property="userName" />
-		<id column="Email" property="email" />
-		<id column="ENROLL_DATE" property="enrollDate" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="USER_NAME" property="userName" />
+		<!-- <result column="EMAIL" property="email" /> // 대소문자 무관하게 컬럼명과 프로퍼티가 같으면 입력 안해도 된다(추측 가능) -->
+		<result column="ENROLL_DATE" property="enrollDate" />
 	</resultMap>
 	
-	<!-- 2번 문제. 회원 추가 
+	<!-- 3번 문제. 회원 추가 
 		- 사용자가 입력한 데이터를 바탕으로 Member테이블에 데이터를 추가
 		- user_no는 시퀀스 자동증가값, 회원가입일을 default값을 활용할것.
 		- parameterType은 자율적으로 작성		
 	-->
 	<insert id="insertMember" parameterType="member">
-		INSERT INTO MEMBER(USER_NO, USER_ID, USER_PWD, USER_NAME, Email, ENROLL_DATE)
+		INSERT INTO MEMBER 
 		VALUES (SEQ_UNO.NEXTVAL, #{userId}, #{userPwd}, #{userName}, #{email}, DEFAULT)
 	</insert>
 	
@@ -48,19 +48,20 @@
 		- 단, resultMap의 constructor를 사용하여 생성자 방식으로 초기화 시킬 것.
 		- parameterType은 자율적으로 작성		
 	-->
-	<select id="selectMemberByName">
+	<select id="selectMemberByName" parameterType="string" resultMap="memberResultMap2">
 		SELECT USER_NO, USER_ID, USER_PWD, USER_NAME, Email
 		FROM MEMBER
-		WHERE USER_NAME = '%' || #{userName} || '%'
+		WHERE USER_NAME LIKE '%' || #{searchKey} || '%'
 	</select>	
 	
-	<resultMap id="MemberMap2" type="member">
-		<id column="USER_NO" property="userNo" />
-		<id column="USER_ID" property="userId" />
-		<id column="USER_PWD" property="userPwd" />
-		<id column="USER_NAME" property="userName" />
-		<id column="Email" property="email" />
-		<id column="ENROLL_DATE" property="enrollDate" />
+	<resultMap type="member" id="memberResultMap2">
+		<constructor>
+			<idArg column="USER_NO" />
+			<arg column="USER_ID" />
+			<arg column="USER_PWD" />
+			<arg column="USER_NAME" />
+			<arg column="EMAIL" />
+		</constructor>
 	</resultMap>
 	
 	
